@@ -27,6 +27,8 @@ public class RNJitsiMeetPackage implements ReactPackage, IRNJitsiMeetViewReferen
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
         modules.add(new RNJitsiMeetModule(reactContext, this));
+        modules.add(new PictureInPictureModule(reactContext));
+
         return modules;
     }
 
