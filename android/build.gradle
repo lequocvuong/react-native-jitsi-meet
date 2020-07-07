@@ -51,5 +51,7 @@ dependencies {
       // config libs conflix with sdk jitsi
       exclude group: 'com.facebook.react',module: 'react-native-google-signin'
       exclude group: 'com.facebook.react',module: 'react-native-community-async-storage'
+      exclude group: 'com.facebook',module: 'hermes'
+
     }
 }
