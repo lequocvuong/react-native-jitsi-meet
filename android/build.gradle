@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation ('org.jitsi.react:jitsi-meet-sdk:2.9.9') {
+    implementation ('org.jitsi.react:jitsi-meet-sdk:2.9.0') {
       transitive = true
       // config libs conflix with sdk jitsi
       exclude group: 'com.facebook.react',module: 'react-native-google-signin'
