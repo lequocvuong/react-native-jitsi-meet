@@ -2,6 +2,7 @@ package com.reactnativejitsimeet;
 
 import android.os.Bundle;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -9,7 +10,9 @@ import java.net.URL;
  * This class represents user information to be passed to {@link RNJitsiMeetConferenceOptions} for
  * identifying a user.
  */
-public class RNJitsiMeetUserInfo {
+public class RNJitsiMeetUserInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /**
      * User's display name.
      */

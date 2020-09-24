@@ -1,24 +1,32 @@
 package com.reactnativejitsimeet;
 
+import android.content.Intent;
 import android.util.Log;
+
+import java.io.Serializable;
 import java.net.URL;
 import java.net.MalformedURLException;
 
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.bridge.ReadableMap;
 
+import org.jitsi.meet.sdk.JitsiMeetUserInfo;
+
 @ReactModule(name = RNJitsiMeetModule.MODULE_NAME)
 public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
     public static final String MODULE_NAME = "RNJitsiMeetModule";
     private IRNJitsiMeetViewReference mJitsiMeetViewReference;
+    private ReactContext mReactContext;
 
     public RNJitsiMeetModule(ReactApplicationContext reactContext, IRNJitsiMeetViewReference jitsiMeetViewReference) {
         super(reactContext);
         mJitsiMeetViewReference = jitsiMeetViewReference;
+        mReactContext = reactContext;
     }
 
     @Override
@@ -36,8 +44,8 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mJitsiMeetViewReference.getJitsiMeetView() != null) {
-                    RNJitsiMeetUserInfo _userInfo = new RNJitsiMeetUserInfo();
+//                if (mJitsiMeetViewReference.getJitsiMeetView() != null) {
+                RNJitsiMeetUserInfo _userInfo = new RNJitsiMeetUserInfo();
                     if (userInfo != null) {
                         if (userInfo.hasKey("displayName")) {
                             _userInfo.setDisplayName(userInfo.getString("displayName"));
@@ -53,15 +61,23 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
                             }
                           }
                     }
-                    RNJitsiMeetConferenceOptions options = new RNJitsiMeetConferenceOptions.Builder()
-                            .setRoom(url)
-                            .setAudioOnly(false)
-                            .setAudioMuted(audioMuted.equals("1"))
-                            .setVideoMuted(videoMuted.equals("1"))
-                            .setUserInfo(_userInfo)
-                            .build();
-                    mJitsiMeetViewReference.getJitsiMeetView().join(options);
-                }
+//                    RNJitsiMeetConferenceOptions options = new RNJitsiMeetConferenceOptions.Builder()
+//                            .setRoom(url)
+//                            .setAudioOnly(false)
+//                            .setAudioMuted(audioMuted.equals("1"))
+//                            .setVideoMuted(videoMuted.equals("1"))
+//                            .setUserInfo(_userInfo)
+//                            .build();
+//                    mJitsiMeetViewReference.getJitsiMeetView().join(options);
+//                }
+
+                Intent intent = new Intent(mReactContext, JitsiMeetCustomActivity.class);
+                intent.putExtra("USER_INFO", (Serializable) _userInfo);
+                intent.putExtra("SERVER_URL", url);
+                intent.putExtra("AUDIO_MUTED", audioMuted);
+                intent.putExtra("VIDEO_MUTED", videoMuted);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mReactContext.startActivity(intent);
             }
         });
     }
