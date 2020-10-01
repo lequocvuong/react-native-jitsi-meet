@@ -13,11 +13,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.WritableNativeMap;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jitsi.meet.sdk.JitsiMeet;
 import org.jitsi.meet.sdk.JitsiMeetActivity;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.jitsi.meet.sdk.JitsiMeetUserInfo;
-import org.jitsi.meet.sdk.JitsiMeetView;
 
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -26,7 +30,9 @@ import java.util.Collection;
 import java.util.Map;
 
 
-public class JitsiMeetCustomActivity extends JitsiMeetActivity {
+public class JitsiMeetCustomActivity extends JitsiMeetActivity  {
+
+    private static final String TAG = "JitsiMeetCustomActivity";
     /**
      * The request code identifying requests for the permission to draw on top
      * of other apps. The value must be 16-bit and is arbitrarily chosen here.
@@ -122,6 +128,9 @@ public class JitsiMeetCustomActivity extends JitsiMeetActivity {
 
         resolveRestrictions();
         setJitsiMeetConferenceDefaultOptions();
+
+        EventBus.getDefault().register(this);
+
         super.initialize();
     }
 
@@ -132,7 +141,12 @@ public class JitsiMeetCustomActivity extends JitsiMeetActivity {
             broadcastReceiver = null;
         }
 
+        EventBus.getDefault().unregister(this);
+
+
         super.onDestroy();
+
+
     }
 
     private void setJitsiMeetConferenceDefaultOptions() {
@@ -151,8 +165,10 @@ public class JitsiMeetCustomActivity extends JitsiMeetActivity {
                 .setFeatureFlag("server-url-change.enabled", !configurationByRestrictions)
                 .build();
 
-        JitsiMeetActivity.launch(this, defaultOptions);
-        this.finish();
+        JitsiMeet.setDefaultConferenceOptions(defaultOptions);
+//        JitsiMeetActivity.launch(this, defaultOptions);
+
+//        this.finish();
 
     }
 
@@ -182,6 +198,14 @@ public class JitsiMeetCustomActivity extends JitsiMeetActivity {
     @Override
     public void onConferenceTerminated(Map<String, Object> data) {
         Log.d(TAG, "Conference terminated: " + data);
+
+        WritableNativeMap params = new WritableNativeMap();
+        params.putString("data", data.toString());
+
+
+        RNJitsiMeetModule.sendEvent("onConferenceTerminated", params);
+        finish();
+
     }
 
     // Activity lifecycle method overrides
@@ -238,7 +262,22 @@ public class JitsiMeetCustomActivity extends JitsiMeetActivity {
     @Override
     public void onConferenceJoined(Map<String, Object> data) {
         Log.d(TAG, "Conference joined: " + data);
+
+        WritableNativeMap params = new WritableNativeMap();
+        params.putString("data", data.toString());
+
+        RNJitsiMeetModule.sendEvent("onConferenceJoined", params);
+
+
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String command) {
+        if(command.equals("endCall")) {
+            Log.d(TAG, "eventBus");
+            leave();
+        }
+    }
 
 }
