@@ -49,7 +49,7 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                if (mJitsiMeetViewReference.getJitsiMeetView() != null) {
+               if (mJitsiMeetViewReference.getJitsiMeetView() != null) {
                     RNJitsiMeetUserInfo _userInfo = new RNJitsiMeetUserInfo();
                     if (userInfo != null) {
                         if (userInfo.hasKey("displayName")) {
@@ -66,23 +66,23 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
                             }
                         }
                     }
-//                    RNJitsiMeetConferenceOptions options = new RNJitsiMeetConferenceOptions.Builder()
-//                            .setRoom(url)
-//                            .setAudioOnly(false)
-//                            .setAudioMuted(audioMuted.equals("1"))
-//                            .setVideoMuted(videoMuted.equals("1"))
-//                            .setUserInfo(_userInfo)
-//                            .build();
-//                    mJitsiMeetViewReference.getJitsiMeetView().join(options);
-                    Intent intent = new Intent(mReactContext, JitsiMeetCustom2Activity.class);
-                    intent.putExtra("USER_INFO", (Serializable) _userInfo);
-                    intent.putExtra("SERVER_URL", url);
-                    intent.putExtra("AUDIO_MUTED", audioMuted);
-                    intent.putExtra("VIDEO_MUTED", videoMuted);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    activity.startActivity(intent);
+                   RNJitsiMeetConferenceOptions options = new RNJitsiMeetConferenceOptions.Builder()
+                           .setRoom(url)
+                           .setAudioOnly(false)
+                           .setAudioMuted(audioMuted.equals("1"))
+                           .setVideoMuted(videoMuted.equals("1"))
+                           .setUserInfo(_userInfo)
+                           .build();
+                   mJitsiMeetViewReference.getJitsiMeetView().join(options);
+//                     Intent intent = new Intent(mReactContext, JitsiMeetCustom2Activity.class);
+//                     intent.putExtra("USER_INFO", (Serializable) _userInfo);
+//                     intent.putExtra("SERVER_URL", url);
+//                     intent.putExtra("AUDIO_MUTED", audioMuted);
+//                     intent.putExtra("VIDEO_MUTED", videoMuted);
+// //                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                     activity.startActivity(intent);
                 }
-//            }
+           }
         });
     }
 
@@ -125,10 +125,10 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                if (mJitsiMeetViewReference.getJitsiMeetView2() != null) {
-//                    mJitsiMeetViewReference.getJitsiMeetView2().leave();
-//                }
-                EventBus.getDefault().post("endCall");
+               if (mJitsiMeetViewReference.getJitsiMeetView() != null) {
+                   mJitsiMeetViewReference.getJitsiMeetView().leave();
+               }
+                // EventBus.getDefault().post("endCall");
 
 
             }
